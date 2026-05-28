@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Socio Economic Status Prediction</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ url_for('static', filename='img/favicon.ico')}}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib/animate/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename = 'lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename = 'css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <style>
+        #policyList li {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border-left: 5px solid #28a745;
+    font-weight: 500;
+}
+
+#policyList li::marker {
+    font-weight: bold;
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Topbar Start -->
+    
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="{{  url_for('user_home')}}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h1 class="m-0">Community Development Supervisor</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <div class="navbar-nav ms-auto py-0">
+                    <a href="{{url_for('logout')}}" class="nav-item nav-link">Logout</a>
+                </div>
+            </div>
+            
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-3 text-white mb-4 animated slideInDown">Demo & Image Analysis</h1>
+            
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function() {
+    $('#showOutput').click(function() {
+        $('#loadingSpinner').show();
+        $('#part').hide()
+        $('#diseases').hide()
+        $('#showOutput').fadeOut(1000);
+        $.ajax({
+            url: '/get_result',
+            type: 'GET',
+            success: function(response) {
+                var data = response;
+                $('#loadingSpinner').hide();
+                $('#name').fadeTo(500,0.4);
+                $('#name').fadeTo(500,1);
+                $('#name').html('<h1 class="display-5 mb-5">'  + data.title + '</h1');
+                $('#details').html('<p class="fs-5 fw-bold text-primary">'+ "Urbanization" + ":" + data.Urbanization + '<br>' + "Population Density"+ ":" + data.Population_Density + '<br>' +"Poverty"+ ":" + data.Poverty + '<br>' + "Agricultural Productivity"+ ":" + data.Agricultural_Productivity + '<br>' + "Deforestation"+ ":" + data.Deforestation + '<br>' + "Land Degradation"+ ":" + data.Land_Degradation + '<br>' + "Disaster Risk"+ ":" + data.Disaster_Risk +'</p');
+
+                // ---------- POLICY SUGGESTIONS ----------
+    if (data.policies) {
+        $('#policyList').empty();
+        data.policies.forEach(function(policy) {
+            $('#policyList').append('<li>' + policy + '</li>');
+        });
+        $('#policyBox').fadeIn(500);
+    } else {
+        $('#policyBox').hide();
+    }
+                $('#downloadPdf').fadeIn(800);
+
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    });
+});
+</script>
+
+    <!-- Projects Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-bold text-primary">Output</p>
+                <div id="loadingSpinner" class="spinner-border text-primary" role="status" style="display: none;">
+                    <span class="sr-only">Loading...</span>
+                    <br>
+                    <br>
+                </div>
+                <style>
+                    
+                </style>
+                <div id="name"><h1 class="display-5 mb-5">Your Input image</h1></div>
+                            <div data-wow-delay="0.1s">
+                <div id = "details"> </div>
+                
+
+                            <center><div id = "inputImage"><img src="{{filename}}" width="350" height="350"></div>
+                                <!-- Policy Suggestions Card -->
+<div id="policyBox" class="row justify-content-center mt-5" style="display:none;">
+    <div class="col-lg-10">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-balance-scale me-2"></i>
+                    Policy Recommendations
+                </h4>
+            </div>
+
+            <div class="card-body">
+                <p class="text-muted text-center mb-4">
+                    Suggested government policies to improve the socio-economic condition of this region
+                </p>
+
+                <ul id="policyList" class="list-group list-group-flush fs-6">
+                    <!-- policies injected here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+                                
+                                <br>
+                                <br>
+
+
+<a id="downloadPdf"
+   href="{{ url_for('download_report') }}"
+   class="btn btn-success py-3 px-4"
+   style="display:none;">
+    Download SES Report (PDF)
+</a>
+                                <button id="showOutput" class="btn btn-primary py-3 px-4">Predict Now</button>
+
+
+
+                            </center>
+                            </div>
+                    </div>
+                </div>
+                </div>
+
+
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Socio Economic Status Detection</a>, All Right Reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='lib/wow/wow.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/counterup/counterup.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/parallax/parallax.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js')}}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+</body>
+
+</html>
